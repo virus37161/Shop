@@ -1,5 +1,5 @@
 Интернет-магазин одежды  
-1. создайте файл .env.dev  
+1. создайте файл .env.dev в директории shop   
 SECRET_KEY='секретный ключ джанго'  
 ALLOWED_HOSTS=localhost 127.0.0.1  
 CSRF_TRUSTED_ORIGINS=http://localhost:8001  
