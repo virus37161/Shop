@@ -7,7 +7,7 @@ POSTGRES_USER=django
 POSTGRES_PASSWORD=password  
 POSTGRES_DB=shop  
 POSTGRES_PORT=5432  
-EMAIL_HOST_USER = email откуда будут приходить коды для регистрации (email.test)
+EMAIL_HOST_USER = email откуда будут приходить коды для регистрации (email.test)  
 EMAIL_HOST_PASSWORD = пароль для данного email
 DEFAULT_FROM_EMAIL = полностью email (email.test@yandex.ru)
 
