@@ -1,0 +1,110 @@
+{% extends 'default.html' %}
+{% load custom_tags %}
+{% csrf_token %}
+
+
+
+{%block navigation%}
+
+
+
+   <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" onclick="toggleDropdown('categoryDropdown')">
+        Категории
+    </button>
+    <div class="dropdown-content" id="categoryDropdown">
+        <ul class="nav">
+            {% for category in categories %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/main/?category={{ category.id }}">{{ category.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% if user.is_authenticated %}
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" onclick="toggleDropdown('userDropdown')">
+        {{ request.user.username }}
+    </button>
+    <div class="dropdown-content" id="userDropdown">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/main/basket/">Корзина</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout_confirm' %}">Выйти</a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+<br><br>
+{%endblock%}
+
+{% block content %}
+
+
+ <div class="container">
+
+      <!-- Page Heading -->
+      <h1 class="my-4"> <small></small></h1>
+{%if new_arrivals%}
+  <form id="filterForm" action="/main/?new=True" method="get">
+   <input type="checkbox" id="newArrivals" name="new" value="True" onchange="this.form.submit()" checked/> Новинки
+</form>
+     {%else%}
+     <form id="filterForm" action="/main/?new=True" method="get">
+
+    <input type="checkbox" id="newArrivals" name="new" value="True" onchange="this.form.submit()" /> Новинки
+</form>
+     {%endif%}
+
+      <div class="row">
+        {%for cloth in clothes%}
+        <div class="col-lg-4 col-sm-6 portfolio-item">
+          <div class="card h-100">
+            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+            <div class="card-body">
+              <h4 class="card-title">
+                   {% if cloth.image %}
+                  <img src="{{cloth.image.url}} " width ="300" height = "400">
+                  {% endif %}
+                <a href="#">{{cloth.name}}</a>
+              </h4>
+              <p class="card-text">Размеры: {%for size in cloth.sizes.all%} <div class="my_size">{{size.size}}</div>{% endfor %}</p>
+
+    {% if cloth.new %}<h5>🆕</h5>{% endif %}
+                <a href="/main/cloth/add/{{cloth.id}}"><h5>🛒</h5></a>
+
+            </div>
+          </div>
+        </div>
+          {% endfor %}
+      </div>
+
+
+    <div class="pagination-container">
+     {% if page_obj.has_previous %}
+       {# Для каждой ссылки пагинации указываем обработку через новый тег #}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+    </div>
+<hr>
+
+     {% endblock content %}
